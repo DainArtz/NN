@@ -19,7 +19,7 @@ if __name__ == "__main__":
     print("Testing accuracy before training...")
     model.test_accuracy(test_inputs, test_labels)
 
-    model.train(train_inputs, train_labels, 500, 100, 0.03)
+    model.train(train_inputs, train_labels, 500, 100, 0.02)
 
     print("Testing accuracy after training...")
     model.test_accuracy(test_inputs, test_labels)

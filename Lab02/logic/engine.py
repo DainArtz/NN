@@ -2,7 +2,7 @@ import numpy as np
 
 
 def softmax(weighted_sums: np.array) -> np.array:
-    exponential_weighted_sums = np.exp(weighted_sums)
+    exponential_weighted_sums = np.exp(weighted_sums - np.max(weighted_sums, axis=1, keepdims=True))
     return exponential_weighted_sums / np.sum(exponential_weighted_sums, axis=1, keepdims=True)
 
 
@@ -16,6 +16,6 @@ def gradient_descent(inputs: np.array, labels: np.array, predictions: np.array) 
     batch_size = labels.shape[0]
     loss_gradients = (labels - predictions) / batch_size
     weights_updates = np.dot(inputs.T, loss_gradients)
-    biases_updates = np.sum(loss_gradients)
+    biases_updates = np.sum(loss_gradients, axis=0)
 
     return weights_updates, biases_updates

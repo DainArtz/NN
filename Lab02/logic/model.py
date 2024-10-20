@@ -38,8 +38,9 @@ class PredictionModel:
 
         print("Training finished!")
 
-    def test_accuracy(self, inputs: np.array, labels: np.array) -> np.floating:
-        print("Accuracy test started!")
+    def test_accuracy(self, inputs: np.array, labels: np.array, toggle_logging: bool = True) -> np.floating:
+        if toggle_logging:
+            print("Accuracy test started!")
 
         predictions = self.predict(inputs)
 
@@ -48,8 +49,9 @@ class PredictionModel:
 
         accuracy = np.mean(predicted_classes == label_classes)
 
-        print("Accuracy test finished!")
-        print(f"Accuracy: {accuracy * 100:.2f}%")
+        if toggle_logging:
+            print("Accuracy test finished!")
+            print(f"Accuracy: {accuracy * 100:.2f}%")
 
         return accuracy
 
