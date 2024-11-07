@@ -19,7 +19,11 @@ if __name__ == "__main__":
     print("Testing accuracy before training...")
     model.test_accuracy(test_inputs, test_labels)
 
-    model.train(train_inputs, train_labels, 300, 100, 0.025)
+    start_time = time.time()
+    print("Started training...")
+    model.train(train_inputs, train_labels, 100, 100, 0.02)
+    end_time = time.time()
+    print(f"Training took {round(end_time - start_time)} seconds.")
 
     print("Testing accuracy after training...")
     model.test_accuracy(test_inputs, test_labels)
@@ -29,5 +33,6 @@ if __name__ == "__main__":
 
     # Test an old model
 
-    # model.deserialize(r"")
+    # Accuracy: 97.1 %
+    # model.deserialize(r"D:\FII\NN\Lab03\models\model_1731007846379.npz")
     # model.test_accuracy(test_inputs, test_labels)

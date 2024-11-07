@@ -1,15 +1,15 @@
 import numpy as np
 
 
-def sigmoid(x: np.array) -> np.array:
-    return 1 / (1 + np.exp(-np.clip(x, -100, 100)))
+def sigmoid(inputs: np.array) -> np.array:
+    return 1 / (1 + np.exp(-np.clip(inputs, -100, 100)))
 
 
-def sigmoid_derivative(x: np.array) -> np.array:
-    value = sigmoid(x)
+def sigmoid_derivative(inputs: np.array) -> np.array:
+    value = sigmoid(inputs)
     return value * (1 - value)
 
 
-def softmax(x: np.array) -> np.array:
-    exp_x = np.exp(x - np.max(x, axis=1, keepdims=True))
-    return exp_x / np.sum(exp_x, axis=1, keepdims=True)
+def softmax(inputs: np.array) -> np.array:
+    exponential_inputs = np.exp(inputs - np.max(inputs, axis=1, keepdims=True))
+    return exponential_inputs / np.sum(exponential_inputs, axis=1, keepdims=True)
