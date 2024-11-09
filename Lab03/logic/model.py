@@ -5,41 +5,60 @@ from logic.engine import sigmoid, softmax, sigmoid_derivative
 
 class PredictionModel:
     def __init__(self):
+        # 784x100
         self.weights_hidden_layer = np.random.randn(784, 100)
+        # 1x100
         self.biases_hidden_layer = np.random.randn(100)
 
+        # 100x10
         self.weights_output_layer = np.random.randn(100, 10)
+        # 1x10
         self.biases_output_layer = np.random.randn(10)
 
     def predict(self, inputs: np.array) -> np.array:
+        # Ax784 DOT 784x100 => Ax100 + 1x100 => Ax100
         outputs_hidden_layer = inputs.dot(self.weights_hidden_layer) + self.biases_hidden_layer
         activated_outputs_hidden_layer = sigmoid(outputs_hidden_layer)
+
+        # Ax100 DOT 100x10 => Ax10 + 1x10 => Ax10
         outputs_output_layer = activated_outputs_hidden_layer.dot(self.weights_output_layer) + self.biases_output_layer
         activated_outputs_output_layer = softmax(outputs_output_layer)
 
         return activated_outputs_output_layer
 
     def perform_backpropagation(self, inputs: np.array, labels: np.array, learning_rate: float) -> None:
+        # 1x100
         active_hidden_layer_nodes = np.random.choice([0, 1], size=(self.weights_hidden_layer.shape[1],),
                                                      p=[1 - 0.8, 0.8])
+        # Ax100
         active_hidden_layer_nodes = np.tile(active_hidden_layer_nodes, (inputs.shape[0], 1))
 
+        # Ax784 DOT 784x100 => Ax100 + 1x100 => Ax100
         outputs_hidden_layer = np.dot(inputs, self.weights_hidden_layer) + self.biases_hidden_layer
         activated_outputs_hidden_layer = sigmoid(outputs_hidden_layer)
+        # Ax100 MUL Ax100 => Ax100
         activated_outputs_hidden_layer *= active_hidden_layer_nodes
 
+        # Ax100 DOT 100x10 => Ax10 + 1x10 => Ax10
         outputs_output_layer = (np.dot(activated_outputs_hidden_layer, self.weights_output_layer) +
                                 self.biases_output_layer)
         activated_outputs_output_layer = softmax(outputs_output_layer)
 
+        # Ax10 - Ax10 => Ax10
         delta_output_layer = labels - activated_outputs_output_layer
+        # 100xA DOT Ax10 => 100X10
         gradient_weights_output_layer = np.dot(activated_outputs_hidden_layer.T, delta_output_layer)
+        # 1x10
         gradient_biases_output_layer = np.sum(delta_output_layer, axis=0)
 
+        # Ax10 DOT 10x100 => Ax100 * Ax100 => Ax100
         delta_hidden_layer = (np.dot(delta_output_layer, self.weights_output_layer.T) *
                               sigmoid_derivative(outputs_hidden_layer))
+        # Ax100 MUL Ax100 => Ax100
         delta_hidden_layer *= active_hidden_layer_nodes
+        # 784xA DOT Ax100 => 784x100
         gradient_weights_hidden_layer = np.dot(inputs.T, delta_hidden_layer)
+        # 1x100
         gradient_biases_hidden_layer = np.sum(delta_hidden_layer, axis=0)
 
         self.weights_hidden_layer += gradient_weights_hidden_layer * learning_rate
